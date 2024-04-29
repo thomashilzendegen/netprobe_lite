@@ -1,12 +1,3 @@
-version: '3.8'  # Use the desired Docker Compose version
-
-networks:
-  custom_network:
-    driver: bridge
-    ipam:
-      config:
-        - subnet: 172.21.0.0/16
-
 services:
   redis:
     restart: always
@@ -14,8 +5,6 @@ services:
     image: "redis:latest"
     volumes:
       - ./config/redis/redis.conf:/etc/redis/redis.conf
-    networks:
-      - custom_network  # Attach to the custom network
 
   netprobe:
     restart: always
@@ -25,8 +14,6 @@ services:
       - .:/netprobe_lite
     environment:
       MODULE: "NETPROBE"
-    networks:
-      - custom_network  # Attach to the custom network
 
   presentation:
     restart: always
@@ -36,8 +23,6 @@ services:
       - .:/netprobe_lite
     environment:
       MODULE: "PRESENTATION"
-    networks:
-      - custom_network  # Attach to the custom network
 
   prometheus:
     restart: always
@@ -45,8 +30,6 @@ services:
     image: "prom/prometheus"
     volumes:
       - ./config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-    networks:
-      - custom_network  # Attach to the custom network
 
   grafana:
     restart: always
@@ -57,6 +40,4 @@ services:
       - ./config/grafana/dashboards/main.yml:/etc/grafana/provisioning/dashboards/main.yml
       - ./config/grafana/dashboards/netprobe.json:/var/lib/grafana/dashboards/netprobe.json
     ports:
-      - '3001:3000'
-    networks:
-      - custom_network  # Attach to the custom network
+      - "3000:3000"
